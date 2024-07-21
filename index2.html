@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Send SMS</title>
+</head>
+<body>
+  <p>Click the button to send an SMS:</p>
+  <a href="sms:+5493547679206">Send SMS</a>
+  <!-- or for multiple recipients -->
+  <a href="intent://send/+543547575826#Intent;scheme=smsto;package=com.whatsapp;action=android.intent.action.SENDTO;end" style="font-size:20px;padding:5px 12px;border-radius:5px;background-color:#189D0E;color:white;text-shadow:none;"> ›› Mensaje de WhatsApp </a>
+  <a href="whatsapp://send?text=Hola Olga&phone=+543547575826">Enviar mensaje a Olga</a>
+  <!-- You can also use JavaScript to create the button -->
+  <button onclick="location.href='sms:+5493547679206';">Send SMS</button>
+  <!-- or for multiple recipients -->
+  <button onclick="location.href='sms:+5493547679206,+11234567890';">Send SMS to multiple recipients</button>
+</body>
+</html>
