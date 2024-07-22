@@ -15,7 +15,7 @@ function sendWhatsAppMessage() {
     }
     // Número de teléfono y mensaje predeterminado
     const phoneNumber = '543547679206';  // Reemplaza con el número de teléfono real
-    const message = 'Hola, ¿cómo estás?';
+    const message = `Hola, soy , ${userName},estoy en la puerta` ;
 
     // Codificar el mensaje para URL
     const encodedMessage = encodeURIComponent(message);
