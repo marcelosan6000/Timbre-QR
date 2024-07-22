@@ -5,7 +5,7 @@ function sendWhatsAppMessage() {
     // Verificar si el usuario ingresó un nombre
     if (userName) {
         // Guardar el nombre en una variable
-        alert(userName) + ", oprimi aceptar..." ;
+        alert(userName + ", oprimi aceptar...") ;
         console.log("Nombre del usuario:", userName);
 
         // Puedes hacer más cosas con el nombre aquí
@@ -15,7 +15,7 @@ function sendWhatsAppMessage() {
     }
     // Número de teléfono y mensaje predeterminado
     const phoneNumber = '543547679206';  // Reemplaza con el número de teléfono real
-    const message = `Hola, soy , ${userName},estoy en la puerta` ;
+    const message = `Hola, soy ${userName},estoy en la puerta` ;
 
     // Codificar el mensaje para URL
     const encodedMessage = encodeURIComponent(message);
