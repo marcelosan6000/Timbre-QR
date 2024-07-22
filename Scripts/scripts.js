@@ -5,7 +5,7 @@ function sendWhatsAppMessage() {
     // Verificar si el usuario ingresó un nombre
     if (userName) {
         // Guardar el nombre en una variable
-        alert("Nombre guardado: " + userName);
+        alert(userName) + ", oprimi aceptar..." ;
         console.log("Nombre del usuario:", userName);
 
         // Puedes hacer más cosas con el nombre aquí
