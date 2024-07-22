@@ -1,0 +1,18 @@
+
+
+#titulo{
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    color: chocolate;
+}
+
+#copy{
+    font-size: 5;
+    color: blue;
+}
+
+#btn{
+    background-color: darkgreen;
+    
+    font-size: large;
+    font-weight: 400;
+}
