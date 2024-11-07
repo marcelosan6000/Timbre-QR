@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Página con 4 iFrames</title>
+    <title>Visualizador de IP Webcam</title>
 </head>
 <body>
-    <iframe src="https://192.168.1.98:8080/browserfs.html" width="600" height="400"></iframe>
-    <iframe src="https://192.168.1.10:8080/browserfs.html" width="600" height="400"></iframe>
-    <iframe src="https://192.168.1.98:8080/video" width="300" height="200"></iframe>
-    <iframe src="https://192.168.1.80/video" width="300" height="200"></iframe>
+    <form action="validar.php" method="post">
+        Usuario: <input type="text" name="usuario">
+        Contraseña: <input type="password" name="contrasena">
+        <input type="submit" value="Iniciar Sesión">
+    </form>
+
+    <div id="video-container"></div>
+
+    <script>
+        // JavaScript para mostrar el iframe después de la autenticación exitosa
+        // (Este código se ejecutaría en la página a la que se redirecciona después de validar.php)
+        var iframe = document.createElement('iframe');
+        iframe.src = "http://192.168.1.98:8080/video";
+        document.getElementById('video-container').appendChild(iframe);
+    </script>
 </body>
 </html>
