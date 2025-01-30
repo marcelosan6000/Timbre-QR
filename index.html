@@ -1,23 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Visualizador de IP Webcam</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificación de Visitantes</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qr-scanner/1.4.2/qr-scanner.min.js"></script>
+    <!-- SDK de Twilio -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twilio/4.7.2/twilio.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        #video-container {
+            width: 100%;
+            max-width: 640px;
+            margin: 20px auto;
+        }
+        #qr-video {
+            width: 100%;
+        }
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        #status {
+            margin: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+    </style>
 </head>
 <body>
-    <form action="validar.php" method="post">
-        Usuario: <input type="text" name="usuario">
-        Contraseña: <input type="password" name="contrasena">
-        <input type="submit" value="Iniciar Sesión">
-    </form>
-
-    <div id="video-container"></div>
+    <h1>Bienvenido</h1>
+    <p>Por favor, permite el acceso a tu cámara para escanear el código QR</p>
+    
+    <div id="video-container">
+        <video id="qr-video"></video>
+    </div>
+    
+    <button id="start-button" class="button">Iniciar Escáner</button>
+    <div id="status"></div>
 
     <script>
-        // JavaScript para mostrar el iframe después de la autenticación exitosa
-        // (Este código se ejecutaría en la página a la que se redirecciona después de validar.php)
-        var iframe = document.createElement('iframe');
-        iframe.src = "http://192.168.1.98:8080/video";
-        document.getElementById('video-container').appendChild(iframe);
+        // Configuración de Twilio
+        const TWILIO_ACCOUNT_SID = 'TU_ACCOUNT_SID';
+        const TWILIO_AUTH_TOKEN = 'TU_AUTH_TOKEN';
+        const TWILIO_PHONE_NUMBER = 'TU_NUMERO_TWILIO';
+        const YOUR_PHONE_NUMBER = 'TU_NUMERO_TELEFONO';
+
+        const videoElem = document.getElementById('qr-video');
+        const startButton = document.getElementById('start-button');
+        const statusDiv = document.getElementById('status');
+        
+        let qrScanner = null;
+
+        // Inicializar el cliente de Twilio
+        const client = new Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+
+        async function initializeScanner() {
+            try {
+                qrScanner = new QrScanner(
+                    videoElem,
+                    async result => {
+                        qrScanner.stop();
+                        statusDiv.className = 'success';
+                        statusDiv.textContent = 'Código QR detectado. Enviando notificación...';
+                        await sendSMS(result);
+                    },
+                    { returnDetailedScanResult: true }
+                );
+
+                startButton.addEventListener('click', () => {
+                    qrScanner.start();
+                    startButton.textContent = 'Escaneando...';
+                });
+
+            } catch (error) {
+                statusDiv.className = 'error';
+                statusDiv.textContent = `Error al inicializar el scanner: ${error.message}`;
+            }
+        }
+
+        async function sendSMS(visitorInfo) {
+            try {
+                // Usar el API REST de Twilio directamente
+                const url = `https://api.twilio.com/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Messages.json`;
+                const base64Credentials = btoa(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`);
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Basic ${base64Credentials}`,
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'To': YOUR_PHONE_NUMBER,
+                        'From': TWILIO_PHONE_NUMBER,
+                        'Body': `Nuevo visitante en tu puerta: ${visitorInfo}`
+                    })
+                });
+
+                if (response.ok) {
+                    statusDiv.className = 'success';
+                    statusDiv.textContent = 'Notificación enviada correctamente';
+                } else {
+                    throw new Error('Error al enviar SMS');
+                }
+            } catch (error) {
+                statusDiv.className = 'error';
+                statusDiv.textContent = `Error al enviar la notificación: ${error.message}`;
+            }
+        }
+
+        // Inicializar el scanner cuando se carga la página
+        window.addEventListener('load', initializeScanner);
     </script>
 </body>
 </html>
